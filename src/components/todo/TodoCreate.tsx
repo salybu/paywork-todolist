@@ -1,20 +1,8 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { addTodos } from 'redux/modules/todos';
+import React from 'react';
+import { useTodo } from '.';
 
-const TodoCreate = () => {
-  const [input, setInput] = useState<string>();
-  const dispatch = useDispatch();
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    dispatch(addTodos({ content: input }));
-    setInput('');
-  };
+const TodoCreate: React.FC = (): JSX.Element => {
+  const { input, handleChange, handleSubmit } = useTodo();
 
   return (
     <form className='todo_form' onSubmit={handleSubmit}>

@@ -1,8 +1,8 @@
-export interface Todoid {
+export interface TodoId {
   id: string;
 }
 
-export interface Todo extends Todoid {
+export interface Todo extends TodoId {
   content: string;
   isCheck: boolean;
   createdAt: string;
@@ -18,7 +18,7 @@ export interface TodosState {
   error: Error | null;
 }
 
-export interface toggleCheckReqType extends Todoid {
+export interface toggleCheckReqType extends TodoId {
   isCheck: boolean;
 }
 

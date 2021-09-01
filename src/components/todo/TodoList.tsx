@@ -1,43 +1,28 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AiOutlineCheckCircle, AiFillCheckCircle } from 'react-icons/ai';
-import { RiDeleteBinFill } from 'react-icons/ri';
-import { getTodos } from 'redux/modules/todos';
-import { RootState, Todos } from 'type';
+import React, { useEffect } from 'react';
+import { Todo } from 'type';
+import TodoItem from './TodoItem';
 
-const TodoList = () => {
-  const [isCheck, setIsCheck] = useState<boolean>(false);
-  const todos = useSelector<RootState, Todos[]>((state) => state.todos.todos);
-  const dispatch = useDispatch();
+export interface ITodoList {
+  todos: Todo[];
+  toggleCheck: (id: string, isCheck: boolean) => void;
+  getTodos: () => void;
+}
 
-  const handleClick = () => {
-    setIsCheck(!isCheck);
-    console.log(todos);
-  };
-
+const TodoList: React.FC<ITodoList> = ({ todos, toggleCheck, getTodos }) => {
   useEffect(() => {
-    dispatch(getTodos());
+    if (todos.length == 0) {
+      getTodos();
+    }
+    console.log(todos);
   }, []);
-
-  useEffect(() => {
-    console.log(todos);
-  }, [dispatch]);
 
   return (
     <ul className='todo_list'>
       {todos.map((todo) => (
-        <li>
-          <div>
-            <button onClick={handleClick}>{todo.isCheck ? <AiFillCheckCircle /> : <AiOutlineCheckCircle />}</button>
-            <p className={todo.isCheck ? 'todo_done' : ''}>{todo.content}</p>
-          </div>
-          <button>
-            <RiDeleteBinFill />
-          </button>
-        </li>
+        <TodoItem todo={todo} toggleCheck={toggleCheck} />
       ))}
     </ul>
   );
 };
 
-export default TodoList;
+export default React.memo(TodoList);

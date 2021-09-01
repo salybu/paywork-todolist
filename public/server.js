@@ -18,6 +18,11 @@ app.use(express.json());
 
 app.get('/todo', (req, res) => {
   console.log('get\t/todo');
+  try {
+    res.json(dbJSON);
+  } catch (e) {
+    console.log('err');
+  }
 });
 
 app.post('/todo', (req, res) => {

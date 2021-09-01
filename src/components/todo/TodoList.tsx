@@ -1,25 +1,41 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { AiOutlineCheckCircle, AiFillCheckCircle } from 'react-icons/ai';
 import { RiDeleteBinFill } from 'react-icons/ri';
+import { getTodos } from 'redux/modules/todos';
+import { RootState, Todos } from 'type';
 
 const TodoList = () => {
-  const [isComplete, setIsComplete] = useState<boolean>(false);
+  const [isCheck, setIsCheck] = useState<boolean>(false);
+  const todos = useSelector<RootState, Todos[]>((state) => state.todos.todos);
+  const dispatch = useDispatch();
 
   const handleClick = () => {
-    setIsComplete(!isComplete);
+    setIsCheck(!isCheck);
+    console.log(todos);
   };
+
+  useEffect(() => {
+    dispatch(getTodos());
+  }, []);
+
+  useEffect(() => {
+    console.log(todos);
+  }, [dispatch]);
 
   return (
     <ul className='todo_list'>
-      <li>
-        <div>
-          <button onClick={handleClick}>{isComplete ? <AiFillCheckCircle /> : <AiOutlineCheckCircle />}</button>
-          <p className={isComplete ? 'todo_done' : ''}>과제</p>
-        </div>
-        <button>
-          <RiDeleteBinFill />
-        </button>
-      </li>
+      {todos.map((todo) => (
+        <li>
+          <div>
+            <button onClick={handleClick}>{todo.isCheck ? <AiFillCheckCircle /> : <AiOutlineCheckCircle />}</button>
+            <p className={todo.isCheck ? 'todo_done' : ''}>{todo.content}</p>
+          </div>
+          <button>
+            <RiDeleteBinFill />
+          </button>
+        </li>
+      ))}
     </ul>
   );
 };

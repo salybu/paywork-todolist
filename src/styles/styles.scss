@@ -85,3 +85,40 @@
     }
   }
 }
+
+.dim {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(80, 80, 80, 0.5);
+}
+
+.modal_content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 2.5rem;
+
+  .close_modal {
+    @include button();
+    float: right;
+    font-size: 1.2rem;
+  }
+
+  & h3 {
+    text-align: center;
+  }
+
+  & form {
+    & input {
+      padding: 0.2rem;
+    }
+    & button {
+      padding: 0.1rem;
+    }
+  }
+}

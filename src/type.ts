@@ -1,5 +1,8 @@
-export interface Todos {
+export interface Todoid {
   id: string;
+}
+
+export interface Todo extends Todoid {
   content: string;
   isCheck: boolean;
   createdAt: string;
@@ -10,7 +13,15 @@ export interface RootState {
 }
 
 export interface TodosState {
-  todos: Todos[];
+  todos: Todo[];
   loading: boolean;
   error: Error | null;
+}
+
+export interface toggleCheckReqType extends Todoid {
+  isCheck: boolean;
+}
+
+export interface addTodoReqType {
+  content: string;
 }

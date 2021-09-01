@@ -1,6 +1,6 @@
 import { Action, createActions, handleActions } from 'redux-actions';
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { Todos, TodosState } from 'type';
+import { addTodoReqType, RootState, Todo, TodosState, toggleCheckReqType } from 'type';
 import TodoService from 'components/todo/TodoService';
 
 const initialState: TodosState = {
@@ -13,7 +13,7 @@ const prefix = 'paywork-todolist/todo';
 
 export const { start, success, fail } = createActions('START', 'SUCCESS', 'FAIL', { prefix });
 
-const reducer = handleActions<TodosState, Todos[]>(
+const reducer = handleActions<TodosState, Todo[]>(
   {
     START: (state) => ({ ...state, loading: true, error: null }),
     SUCCESS: (state, action) => ({
@@ -32,24 +32,35 @@ const reducer = handleActions<TodosState, Todos[]>(
 );
 
 export default reducer;
+export const selectTodos = (state: RootState) => state.todos;
 
 // saga
-export const { getTodos, addTodos, deleteTodos } = createActions('GET_TODOS', 'ADD_TODOS', 'DELETE_TODOS', { prefix });
+export const { getTodos, addTodos, deleteTodos, toggleCheckTodos } = createActions('GET_TODOS', 'ADD_TODOS', 'DELETE_TODOS', 'TOGGLE_CHECK_TODOS', { prefix });
 
 function* getTodosSaga() {
   try {
     yield put(start());
-    const todos: Todos[] = yield call(TodoService.getTodos);
+    const todos: Todo[] = yield call(TodoService.getTodos);
     yield put(success(todos));
+    console.log(todos, '      here in todos reducer getTodosSaga');
   } catch (error) {
     // yield put(fail(new Error(error?.response?.data?.error || 'UNKNOWN_ERROR')));
   }
 }
 
-function* addTodosSaga(action: Action<Todos[]>) {
+function* toggleIsCheckTodosSaga(action: Action<toggleCheckReqType>) {
   try {
     yield put(start());
-    const todos: Todos[] = yield call(TodoService.getTodos);
+    const todos: Todo[] = yield call(TodoService.toggleIsCheckTodos, action.payload.id, action.payload.isCheck);
+    yield put(success(todos));
+    // console.log(todos, '      here in todos reducer toggleIsCheckTodosSaga');
+  } catch (error) {}
+}
+
+function* addTodosSaga(action: Action<addTodoReqType>) {
+  try {
+    yield put(start());
+    const todos: Todo[] = yield call(TodoService.addTodo, action.payload.content);
     yield put(success(todos));
   } catch (error) {
     // yield put(fail(new Error(error?.response?.data?.error || 'UNKNOWN_ERROR')));
@@ -58,4 +69,6 @@ function* addTodosSaga(action: Action<Todos[]>) {
 
 export function* todosSaga() {
   yield takeLatest(`${prefix}/GET_TODOS`, getTodosSaga);
+  yield takeLatest(`${prefix}/TOGGLE_CHECK_TODOS`, toggleIsCheckTodosSaga);
+  yield takeLatest(`${prefix}/ADD_TODOS`, addTodosSaga);
 }

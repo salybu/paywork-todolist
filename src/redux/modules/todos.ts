@@ -1,6 +1,6 @@
 import { Action, createActions, handleActions } from 'redux-actions';
-import { call, put, takeLatest } from 'redux-saga/effects';
-import { addTodoReqType, RootState, Todo, TodosState, toggleCheckReqType } from 'type';
+import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
+import { addTodoReqType, RootState, Todo, TodoId, TodosState, toggleCheckReqType } from 'type';
 import TodoService from 'components/todo/TodoService';
 
 const initialState: TodosState = {
@@ -67,8 +67,18 @@ function* addTodosSaga(action: Action<addTodoReqType>) {
   }
 }
 
+function* deleteTodosSaga(action: Action<TodoId>) {
+  try {
+    console.log('deleteTodosSaga action      ', action);
+    yield put(start());
+    const todos: Todo[] = yield call(TodoService.deleteTodo, action.payload.id);
+    // yield put(success(todos));
+  } catch (error) {}
+}
+
 export function* todosSaga() {
   yield takeLatest(`${prefix}/GET_TODOS`, getTodosSaga);
-  yield takeLatest(`${prefix}/TOGGLE_CHECK_TODOS`, toggleIsCheckTodosSaga);
+  yield takeEvery(`${prefix}/TOGGLE_CHECK_TODOS`, toggleIsCheckTodosSaga);
   yield takeLatest(`${prefix}/ADD_TODOS`, addTodosSaga);
+  yield takeLatest(`${prefix}/DELETE_TODOS`, deleteTodosSaga);
 }

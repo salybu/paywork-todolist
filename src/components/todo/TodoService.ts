@@ -1,7 +1,5 @@
 import { Todo } from 'type';
-
-const BASE_URL = `http://localhost:5000`;
-const TODO_URL = BASE_URL + `/todo`;
+import { TODO_URL } from 'config';
 
 export default class TodoService {
   public static async getTodos(): Promise<Todo[]> {
@@ -25,8 +23,6 @@ export default class TodoService {
         isCheck: isCheck,
       }),
     });
-    // console.log(response.json(), '      here in TodoService toggleIsCheckTodos');
-    // return response.json();
     const data = JSON.parse(await response.json()).todos;
     return data;
   }
@@ -40,6 +36,19 @@ export default class TodoService {
       body: JSON.stringify({
         content: content,
       }),
+    });
+    const data = JSON.parse(await response.json()).todos;
+    return data;
+  }
+
+  public static async deleteTodo(id: string): Promise<void> {
+    console.log('todoService deletodos');
+    const response = await fetch(TODO_URL + `/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
     });
     const data = JSON.parse(await response.json()).todos;
     return data;

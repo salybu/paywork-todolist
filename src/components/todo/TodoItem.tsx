@@ -6,9 +6,10 @@ import { Todo } from 'type';
 export interface ITodoItem {
   todo: Todo;
   toggleCheck: (id: string, isCheck: boolean) => void;
+  deleteTodo: (id: string) => void;
 }
 
-const TodoItem: React.FC<ITodoItem> = ({ todo, toggleCheck }) => {
+const TodoItem: React.FC<ITodoItem> = ({ todo, toggleCheck, deleteTodo }) => {
   return (
     <li>
       <div>
@@ -22,7 +23,11 @@ const TodoItem: React.FC<ITodoItem> = ({ todo, toggleCheck }) => {
         </button>
         <p className={todo.isCheck ? 'todo_done' : ''}>{todo.content}</p>
       </div>
-      <button>
+      <button
+        onClick={() => {
+          deleteTodo(todo.id);
+        }}
+      >
         <RiDeleteBinFill />
       </button>
     </li>

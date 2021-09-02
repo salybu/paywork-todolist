@@ -5,7 +5,7 @@ import 'styles/GlobalStyles.scss';
 import App from './App';
 import create from 'redux/create';
 
-const store = create();
+const store = create(); // store 생성 및 관련 로직 실행 후, store 리턴
 
 ReactDOM.render(
   <React.StrictMode>

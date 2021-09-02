@@ -1,6 +1,6 @@
 import { Action, createActions, handleActions } from 'redux-actions';
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
-import { addTodoReqType, RootState, Todo, TodoId, TodosState, toggleCheckReqType } from 'type';
+import { addTodoReqType, editTodoReqType, RootState, Todo, TodoId, TodosState, toggleCheckReqType } from 'type';
 import TodoService from 'components/todo/TodoService';
 
 const initialState: TodosState = {
@@ -32,10 +32,18 @@ const reducer = handleActions<TodosState, Todo[]>(
 );
 
 export default reducer;
+
 export const selectTodos = (state: RootState) => state.todos;
 
 // saga
-export const { getTodos, addTodos, deleteTodos, toggleCheckTodos } = createActions('GET_TODOS', 'ADD_TODOS', 'DELETE_TODOS', 'TOGGLE_CHECK_TODOS', { prefix });
+export const { getTodos, addTodos, deleteTodos, editTodos, toggleCheckTodos } = createActions(
+  'GET_TODOS',
+  'ADD_TODOS',
+  'DELETE_TODOS',
+  'EDIT_TODOS',
+  'TOGGLE_CHECK_TODOS',
+  { prefix },
+);
 
 function* getTodosSaga() {
   try {
@@ -76,9 +84,18 @@ function* deleteTodosSaga(action: Action<TodoId>) {
   } catch (error) {}
 }
 
+function* editTodosSaga(action: Action<editTodoReqType>) {
+  try {
+    yield put(start());
+    const todos: Todo[] = yield call(TodoService.editTodo, action.payload.id, action.payload.content);
+    yield put(success(todos));
+  } catch (error) {}
+}
+
 export function* todosSaga() {
   yield takeLatest(`${prefix}/GET_TODOS`, getTodosSaga);
   yield takeEvery(`${prefix}/TOGGLE_CHECK_TODOS`, toggleIsCheckTodosSaga);
   yield takeLatest(`${prefix}/ADD_TODOS`, addTodosSaga);
   yield takeLatest(`${prefix}/DELETE_TODOS`, deleteTodosSaga);
+  yield takeLatest(`${prefix}/EDIT_TODOS`, editTodosSaga);
 }

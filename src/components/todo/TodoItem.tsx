@@ -9,10 +9,11 @@ import useModal from 'components/useModal';
 export interface ITodoItem {
   todo: Todo;
   toggleCheck: (id: string, isCheck: boolean) => void;
+  editTodo: (id: string, content: string) => void;
   deleteTodo: (id: string) => void;
 }
 
-const TodoItem: React.FC<ITodoItem> = ({ todo, toggleCheck, deleteTodo }) => {
+const TodoItem: React.FC<ITodoItem> = ({ todo, toggleCheck, editTodo, deleteTodo }) => {
   const { isVisible, openModal, closeModal } = useModal();
 
   return (
@@ -40,7 +41,7 @@ const TodoItem: React.FC<ITodoItem> = ({ todo, toggleCheck, deleteTodo }) => {
           <RiDeleteBinFill />
         </button>
       </div>
-      {isVisible && <Modal id={todo.id} content={todo.content} closeModal={closeModal} />}
+      {isVisible && <Modal id={todo.id} content={todo.content} closeModal={closeModal} editTodo={editTodo} />}
     </li>
   );
 };

@@ -13,7 +13,7 @@ export default class TodoService {
     return data;
   }
 
-  public static async toggleIsCheckTodos(id: string, isCheck: boolean): Promise<void> {
+  public static async toggleIsCheckTodos(id: string, isCheck: boolean): Promise<Todo[]> {
     const response = await fetch(TODO_URL + `/${id}`, {
       method: 'POST',
       headers: {
@@ -27,7 +27,7 @@ export default class TodoService {
     return data;
   }
 
-  public static async addTodo(content: string): Promise<void> {
+  public static async addTodo(content: string): Promise<Todo[]> {
     const response = await fetch(TODO_URL, {
       method: 'POST',
       headers: {
@@ -41,7 +41,7 @@ export default class TodoService {
     return data;
   }
 
-  public static async deleteTodo(id: string): Promise<void> {
+  public static async deleteTodo(id: string): Promise<Todo[]> {
     console.log('todoService deletodos');
     const response = await fetch(TODO_URL + `/${id}`, {
       method: 'POST',
@@ -49,6 +49,18 @@ export default class TodoService {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({}),
+    });
+    const data = JSON.parse(await response.json()).todos;
+    return data;
+  }
+
+  public static async editTodo(id: string, content: string): Promise<Todo[]> {
+    const response = await fetch(TODO_URL + `/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ content }),
     });
     const data = JSON.parse(await response.json()).todos;
     return data;

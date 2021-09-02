@@ -5,9 +5,10 @@ export interface IEditTodo {
   id: string;
   content: string;
   closeModal: () => void;
+  editTodo: (id: string, content: string) => void;
 }
 
-const Modal: React.FC<IEditTodo> = ({ id, content, closeModal }) => {
+const Modal: React.FC<IEditTodo> = ({ id, content, closeModal, editTodo }) => {
   const [input, setInput] = useState<string>(content);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -16,6 +17,7 @@ const Modal: React.FC<IEditTodo> = ({ id, content, closeModal }) => {
 
   const handleClick = (e: React.FormEvent) => {
     e.preventDefault();
+    editTodo(id, input);
     closeModal();
   };
 

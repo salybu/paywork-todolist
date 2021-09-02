@@ -25,3 +25,5 @@ export interface toggleCheckReqType extends TodoId {
 export interface addTodoReqType {
   content: string;
 }
+
+export type editTodoReqType = TodoId & addTodoReqType;
